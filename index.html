@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Succinct Chess</title>
+  <link rel="stylesheet" href="https://unpkg.com/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css" />
+  <style>
+    body {
+      background-color: #1e1e1e;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding-top: 30px;
+    }
+    h1 {
+      margin-bottom: 20px;
+    }
+    #board {
+      width: 400px;
+      margin: auto;
+    }
+    .black-1e1d1d {
+      background-color: #ffb6c1 !important; /* light pink */
+    }
+  </style>
+</head>
+<body>
+  <h1>Succinct Chess</h1>
+  <div id="board"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
+  <script src="https://unpkg.com/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js"></script>
+  <script>
+    const boardElement = document.getElementById("board");
+    const game = new Chess();
+
+    const onDragStart = (source, piece) => {
+      if (game.game_over() ||
+        (game.turn() === 'w' && piece.search(/^b/) !== -1) ||
+        (game.turn() === 'b' && piece.search(/^w/) !== -1)) {
+        return false;
+      }
+    };
+
+    const onDrop = (source, target) => {
+      const move = game.move({ from: source, to: target, promotion: 'q' });
+
+      if (move === null) return 'snapback';
+    };
+
+    const onSnapEnd = () => {
+      board.position(game.fen());
+    };
+
+    const board = Chessboard('board', {
+      draggable: true,
+      position: 'start',
+      onDragStart: onDragStart,
+      onDrop: onDrop,
+      onSnapEnd: onSnapEnd
+    });
+  </script>
+</body>
+</html>
